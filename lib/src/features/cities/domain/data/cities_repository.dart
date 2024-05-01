@@ -2,6 +2,6 @@ import 'package:flutter_open_weather_ex/src/features/cities/domain/entity/cities
 
 abstract class CitiesRepository {
   Stream<List<CityEntity>> fetchCities();
-  Stream<CityEntity> readSelectedCity();
-  Stream<void> writeSelectedCity(CityEntity city);
+  Stream<CityEntity?> readSelectedCity();
+  Future<void> writeSelectedCity(CityEntity city);
 }

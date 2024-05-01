@@ -1,8 +1,8 @@
-import 'package:flutter_open_weather_ex/src/features/cities/cities.dart';
-import 'package:flutter_open_weather_ex/src/features/main_page/presentation/bloc/main_page_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../features/features.dart';
+import '../managers/shared_preferences_manager.dart';
 
 final GetIt injector = GetIt.instance;
 
@@ -12,14 +12,18 @@ class DependencyInjections {
   Future<void> registerDependencies() async {
     // Stuff
     injector.registerSingleton<CitiesAPI>(CitiesApiImpl());
+    injector.registerSingleton<SharedPreferencesManager>(
+      SharedPreferencesManagerImpl(prefs: await SharedPreferences.getInstance()),
+    );
 
     // Data sources
-    injector.registerSingleton<CitiesDataSourceRemote>(
-        CitiesDataSourceRemoteImpl(citiesAPI: injector()));
+    injector.registerSingleton<CitiesDataSource>(CitiesDataSourceRemoteImpl(citiesAPI: injector()));
+    injector.registerSingleton<CityDataSource>(CityDataSourceLocalImpl(prefsManager: injector()));
 
     // Repositories
-    injector
-        .registerSingleton<CitiesRepository>(CitiesRepositoryImpl(dataSourceRemote: injector()));
+    injector.registerSingleton<CitiesRepository>(
+      CitiesRepositoryImpl(dataSourceRemote: injector(), cityDataSource: injector()),
+    );
 
     // Blocs
     injector.registerSingleton<CitiesBloc>(CitiesBloc(citiesRepository: injector()));

@@ -14,6 +14,10 @@ class CitiesBloc extends Bloc<CitiesEvent, CitiesState> {
       : _repository = citiesRepository,
         super(CitiesInitial()) {
     on<LoadCitiesDataEvent>(_loadCitiesDataEvent);
+    on<LoadSelectedCityEvent>(_loadSelectedCityEvent);
+    on<SaveCityEvent>(_saveCityEvent);
+
+    add(const LoadCitiesDataEvent());
   }
 
   Future<void> _loadCitiesDataEvent(LoadCitiesDataEvent event, Emitter emit) async {
@@ -26,5 +30,21 @@ class CitiesBloc extends Bloc<CitiesEvent, CitiesState> {
       onData: (List<CityEntity> cities) => CitiesLoaded(cities: cities),
       onError: (error, _) => CitiesError(),
     );
+
+    add(const LoadSelectedCityEvent());
+  }
+
+  Future<void> _loadSelectedCityEvent(LoadSelectedCityEvent event, Emitter emit) async {
+    if (state is CitiesLoaded) {
+      await emit.forEach(
+        _repository.readSelectedCity(),
+        onData: (CityEntity? city) => (state as CitiesLoaded).copyWith(selectedCity: city),
+      );
+    }
+  }
+
+  Future<void> _saveCityEvent(SaveCityEvent event, Emitter emit) async {
+    await _repository.writeSelectedCity(event.cityEntity);
+    add(const LoadSelectedCityEvent());
   }
 }

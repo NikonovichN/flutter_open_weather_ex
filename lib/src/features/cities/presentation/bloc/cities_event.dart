@@ -9,7 +9,17 @@ sealed class CitiesEvent extends Equatable {
 
 final class LoadCitiesDataEvent extends CitiesEvent {
   const LoadCitiesDataEvent();
+}
+
+final class LoadSelectedCityEvent extends CitiesEvent {
+  const LoadSelectedCityEvent();
+}
+
+final class SaveCityEvent extends CitiesEvent {
+  final CityEntity cityEntity;
+
+  const SaveCityEvent({required this.cityEntity});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [cityEntity];
 }
