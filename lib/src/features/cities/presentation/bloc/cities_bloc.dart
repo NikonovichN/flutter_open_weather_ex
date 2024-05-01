@@ -16,13 +16,13 @@ class CitiesBloc extends Bloc<CitiesEvent, CitiesState> {
     on<LoadCitiesDataEvent>(_loadCitiesDataEvent);
   }
 
-  void _loadCitiesDataEvent(LoadCitiesDataEvent event, Emitter emit) {
+  Future<void> _loadCitiesDataEvent(LoadCitiesDataEvent event, Emitter emit) async {
     emit(CitiesLoading());
 
-    final fetchCitiesStream = _repository.fetchCities();
+    final citiesStream = _repository.fetchCities();
 
-    emit.forEach(
-      fetchCitiesStream,
+    await emit.forEach(
+      citiesStream,
       onData: (List<CityEntity> cities) => CitiesLoaded(cities: cities),
       onError: (error, _) => CitiesError(),
     );
