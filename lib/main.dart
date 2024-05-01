@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
-void main() {
+import 'src/di/injections.dart';
+import 'src/features/features.dart';
+
+void main() async {
+  await const DependencyInjections().registerDependencies();
+
   runApp(const MyApp());
 }
 
@@ -15,7 +20,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const Scaffold(body: Center(child: Text('Weather open map'))),
+      home: const MainPage(),
     );
   }
 }
