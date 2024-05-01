@@ -2,6 +2,8 @@ abstract class CitiesAPI {
   String get getSecretKey;
   String get getBaseURI;
   String get getCitiesPath;
+  String get getDefaultCountry;
+  String get getDefaultLimitOfCities;
 }
 
 class CitiesApiImpl implements CitiesAPI {
@@ -11,6 +13,10 @@ class CitiesApiImpl implements CitiesAPI {
 
   static const citiesPath = 'places/autocomplete';
 
+  static const defaultCountry = 'BY';
+
+  static const defaultLimitOfCities = '30';
+
   @override
   String get getSecretKey => secretKey;
 
@@ -19,4 +25,10 @@ class CitiesApiImpl implements CitiesAPI {
 
   @override
   String get getCitiesPath => citiesPath;
+
+  @override
+  String get getDefaultCountry => defaultCountry;
+
+  @override
+  String get getDefaultLimitOfCities => defaultLimitOfCities;
 }
