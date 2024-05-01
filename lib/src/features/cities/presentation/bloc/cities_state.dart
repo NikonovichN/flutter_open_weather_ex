@@ -16,6 +16,19 @@ final class CitiesLoaded extends CitiesState {
   final List<CityEntity> cities;
 
   const CitiesLoaded({this.selectedCity, required this.cities});
+
+  @override
+  List<Object> get props => [selectedCity ?? {}, cities];
+
+  CitiesLoaded copyWith({
+    CityEntity? selectedCity,
+    List<CityEntity>? cities,
+  }) {
+    return CitiesLoaded(
+      cities: cities ?? this.cities,
+      selectedCity: selectedCity ?? this.selectedCity,
+    );
+  }
 }
 
 final class CitiesError extends CitiesState {}

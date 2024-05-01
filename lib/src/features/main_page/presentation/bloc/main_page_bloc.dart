@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:rxdart/rxdart.dart' as rx;
 
 import '../../../cities/cities.dart';
 
@@ -17,17 +18,16 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
   Future<void> _listenDependencies(ListenDependencies event, Emitter emit) async {
     emit(MainPageLoading());
 
-    await _citiesBloc.stream.forEach((citiesState) {
-      switch (citiesState) {
-        case CitiesInitial():
-          emit(MainPageLoading());
-        case CitiesLoading():
-          emit(MainPageLoading());
-        case CitiesLoaded():
-          emit(MainPageLoaded());
-        case CitiesError():
-          emit(MainPageError());
-      }
+    await rx.BehaviorSubject.seeded(_citiesBloc.stream).forEach((citiesState) async {
+      await emit.forEach(
+        citiesState,
+        onData: (citiesData) => switch (citiesData) {
+          CitiesInitial() => MainPageLoading(),
+          CitiesLoading() => MainPageLoading(),
+          CitiesLoaded() => MainPageLoaded(),
+          CitiesError() => MainPageError(),
+        },
+      );
     });
   }
 }

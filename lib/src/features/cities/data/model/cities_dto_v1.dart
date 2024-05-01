@@ -15,4 +15,6 @@ class CitiesDtoV1 {
   });
 
   factory CitiesDtoV1.fromJson(Map<String, dynamic> json) => _$CitiesDtoV1FromJson(json);
+
+  Map<String, dynamic> toJson() => _$CitiesDtoV1ToJson(this);
 }

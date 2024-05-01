@@ -10,4 +10,6 @@ class CoordinatesDtoV1 {
   const CoordinatesDtoV1({required this.latitude, required this.longitude});
 
   factory CoordinatesDtoV1.fromJson(Map<String, dynamic> json) => _$CoordinatesDtoV1FromJson(json);
+
+  Map<String, dynamic> toJson() => _$CoordinatesDtoV1ToJson(this);
 }

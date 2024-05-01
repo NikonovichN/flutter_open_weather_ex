@@ -1,22 +1,26 @@
 import 'dart:convert';
 
-import 'package:flutter_open_weather_ex/src/features/cities/data/model/cities_dto_v1.dart';
-import 'package:flutter_open_weather_ex/src/features/cities/data/model/coordinates_dto_v1.dart';
-
+import '../model/cities_dto_v1.dart';
+import '../model/coordinates_dto_v1.dart';
 import '../../domain/entity/cities.dart';
 import '../../domain/data/cities_repository.dart';
+import '../data_source/city_data_source_local.dart';
 import '../data_source/cities_data_source_remote.dart';
 
 class CitiesRepositoryImpl implements CitiesRepository {
-  final CitiesDataSourceRemote _dataSourceRemote;
+  final CitiesDataSource _citiesDataSource;
+  final CityDataSource _cityDataSource;
 
-  const CitiesRepositoryImpl({required CitiesDataSourceRemote dataSourceRemote})
-      : _dataSourceRemote = dataSourceRemote;
+  const CitiesRepositoryImpl({
+    required CitiesDataSource dataSourceRemote,
+    required CityDataSource cityDataSource,
+  })  : _citiesDataSource = dataSourceRemote,
+        _cityDataSource = cityDataSource;
 
   @override
   Stream<List<CityEntity>> fetchCities() async* {
     try {
-      final response = await _dataSourceRemote.fetchCities();
+      final response = await _citiesDataSource.fetchCities();
 
       if (response.statusCode != 200) {
         throw Exception();
@@ -28,20 +32,32 @@ class CitiesRepositoryImpl implements CitiesRepository {
 
       yield* Stream.value(serializedResponse);
     } catch (_) {
-      yield* Stream.error('Something went wrong!');
+      yield* Stream.error('Something went wrong! Failed to load cities!');
     }
   }
 
   @override
-  Stream<CityEntity> readSelectedCity() {
-    // TODO: implement readSelectedCity
-    throw UnimplementedError();
+  Stream<CityEntity?> readSelectedCity() async* {
+    try {
+      final response = await _cityDataSource.readSelectedCity();
+
+      if (response == null) {
+        yield* Stream.value(null);
+      } else {
+        yield* Stream.value(CitiesDtoV1.fromJson(jsonDecode(response)).toEntity);
+      }
+    } catch (_) {
+      yield* Stream.error('Something went wrong! Failed to load the city!');
+    }
   }
 
   @override
-  Stream<void> writeSelectedCity(CityEntity city) {
-    // TODO: implement writeSelectedCity
-    throw UnimplementedError();
+  Future<void> writeSelectedCity(CityEntity city) async {
+    try {
+      await _cityDataSource.writeSelectedCity(jsonEncode(city.toJson));
+    } catch (_) {
+      Future.error('Something went wrong! City has not been recorded in the local repository!');
+    }
   }
 }
 
@@ -51,4 +67,14 @@ extension on CitiesDtoV1 {
 
 extension on CoordinatesDtoV1 {
   CoordinatesEntity get toEntity => CoordinatesEntity(latitude: latitude, longitude: longitude);
+}
+
+extension on CityEntity {
+  Map<String, dynamic> get toJson => CitiesDtoV1(
+        coordinates: CoordinatesDtoV1(
+          latitude: coordinates.latitude,
+          longitude: coordinates.longitude,
+        ),
+        name: name,
+      ).toJson();
 }

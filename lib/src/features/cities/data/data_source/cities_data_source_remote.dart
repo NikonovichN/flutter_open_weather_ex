@@ -2,11 +2,11 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter_open_weather_ex/src/features/cities/api.dart';
 
-abstract class CitiesDataSourceRemote {
+abstract class CitiesDataSource {
   Future<http.Response> fetchCities();
 }
 
-class CitiesDataSourceRemoteImpl implements CitiesDataSourceRemote {
+class CitiesDataSourceRemoteImpl implements CitiesDataSource {
   final CitiesAPI _citiesAPI;
 
   const CitiesDataSourceRemoteImpl({

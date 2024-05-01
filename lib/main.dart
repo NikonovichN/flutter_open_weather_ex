@@ -4,6 +4,7 @@ import 'src/di/injections.dart';
 import 'src/features/features.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await const DependencyInjections().registerDependencies();
 
   runApp(const MyApp());

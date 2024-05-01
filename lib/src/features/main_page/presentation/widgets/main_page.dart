@@ -13,9 +13,7 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<CitiesBloc>(
-          create: (_) => injector<CitiesBloc>()..add(const LoadCitiesDataEvent()),
-        ),
+        BlocProvider<CitiesBloc>(create: (_) => injector<CitiesBloc>()),
         BlocProvider<MainPageBloc>(
           create: (BuildContext context) {
             return MainPageBloc(
@@ -30,6 +28,8 @@ class MainPage extends StatelessWidget {
 }
 
 class _MainPageContent extends StatelessWidget {
+  static const _emptySpaceL = SizedBox(height: 20.0);
+
   const _MainPageContent();
 
   @override
@@ -40,7 +40,14 @@ class _MainPageContent extends StatelessWidget {
           child: switch (state) {
             MainPageInitial() => const CircularProgressIndicator(),
             MainPageLoading() => const CircularProgressIndicator(),
-            MainPageLoaded() => const Text('Loaded'),
+            MainPageLoaded() => const Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Loaded'),
+                  _emptySpaceL,
+                  CitiesWidget(),
+                ],
+              ),
             MainPageError() => const Text('Something went wrong...'),
           },
         );
