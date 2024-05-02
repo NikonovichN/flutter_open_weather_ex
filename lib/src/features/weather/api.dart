@@ -41,3 +41,9 @@ class WeatherQueryParams {
         'appid': appid,
       };
 }
+
+enum UnitMetrics {
+  standard,
+  metric,
+  imperial,
+}

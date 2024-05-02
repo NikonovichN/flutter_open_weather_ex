@@ -23,7 +23,6 @@ class WeatherRepositoryImpl implements WeatherRepository {
       if (response.statusCode != 200) {
         throw Exception();
       }
-
       yield* Stream.value(ListWeatherDetailsDtoV1.fromJson(jsonDecode(response.body)).toEntity);
     } catch (_) {
       yield* Stream.error('Something went wrong! Fails to get weather data!');
@@ -32,12 +31,15 @@ class WeatherRepositoryImpl implements WeatherRepository {
 }
 
 extension on ListWeatherDetailsDtoV1 {
-  List<WeatherDetails> get toEntity => data.map((e) => e.toEntity).toList();
+  List<WeatherDetails> get toEntity => list.map((e) => e.toEntity).toList();
 }
 
 extension on WeatherDetailsDtoV1 {
   WeatherDetails get toEntity => WeatherDetails(
-      date: date, main: main.toEntity, status: status.map((e) => e.toEntity).toList());
+        date: DateTime.fromMillisecondsSinceEpoch(date.toInt() * 1000),
+        main: main.toEntity,
+        status: status.map((e) => e.toEntity).toList(),
+      );
 }
 
 extension on MainWeatherInfoDtoV1 {

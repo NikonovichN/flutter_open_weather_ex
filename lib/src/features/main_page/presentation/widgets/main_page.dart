@@ -14,6 +14,7 @@ class MainPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<CitiesBloc>(create: (_) => injector<CitiesBloc>()),
+        BlocProvider<WeatherBloc>(create: (_) => injector<WeatherBloc>()),
         BlocProvider<MainPageBloc>(
           create: (BuildContext context) {
             return MainPageBloc(
@@ -45,13 +46,39 @@ class _MainPageContent extends StatelessWidget {
                 children: [
                   Text('Loaded'),
                   _emptySpaceL,
-                  CitiesWidget(),
+                  _CitiesListenerWrapper(),
                 ],
               ),
             MainPageError() => const Text('Something went wrong...'),
           },
         );
       },
+    );
+  }
+}
+
+class _CitiesListenerWrapper extends StatelessWidget {
+  const _CitiesListenerWrapper();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<CitiesBloc, CitiesState>(
+      listener: (context, state) {
+        if (state is CitiesLoaded && state.selectedCity != null) {
+          // TODO: move this logic to bloc
+          context.read<WeatherBloc>().add(
+                UpdateWeatherDataByCityEvent(
+                  queryParams: WeatherQueryParams(
+                    lat: state.selectedCity!.coordinates.latitude.toString(),
+                    lon: state.selectedCity!.coordinates.longitude.toString(),
+                    units: UnitMetrics.metric.name,
+                    appid: injector<WeatherAPI>().getSecretKey,
+                  ),
+                ),
+              );
+        }
+      },
+      child: const CitiesWidget(),
     );
   }
 }
