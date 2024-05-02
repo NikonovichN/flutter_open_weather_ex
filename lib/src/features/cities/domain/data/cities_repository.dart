@@ -1,4 +1,4 @@
-import 'package:flutter_open_weather_ex/src/features/cities/domain/entity/cities.dart';
+import '../entity/cities.dart';
 
 abstract class CitiesRepository {
   Stream<List<CityEntity>> fetchCities();

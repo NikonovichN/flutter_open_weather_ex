@@ -17,8 +17,9 @@ class WeatherDetails extends Equatable {
 
 class MainWeatherInfo extends Equatable {
   final num temp;
+  final num tempFeelsLike;
 
-  const MainWeatherInfo({required this.temp});
+  const MainWeatherInfo({required this.temp, required this.tempFeelsLike});
 
   @override
   List<Object?> get props => [temp];
