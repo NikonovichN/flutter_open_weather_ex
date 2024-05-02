@@ -12,6 +12,7 @@ class DependencyInjections {
   Future<void> registerDependencies() async {
     // Stuff
     injector.registerSingleton<CitiesAPI>(CitiesApiImpl());
+    injector.registerSingleton<WeatherAPI>(WeatherApiImpl());
     injector.registerSingleton<SharedPreferencesManager>(
       SharedPreferencesManagerImpl(prefs: await SharedPreferences.getInstance()),
     );
@@ -19,14 +20,21 @@ class DependencyInjections {
     // Data sources
     injector.registerSingleton<CitiesDataSource>(CitiesDataSourceRemoteImpl(citiesAPI: injector()));
     injector.registerSingleton<CityDataSource>(CityDataSourceLocalImpl(prefsManager: injector()));
+    injector.registerSingleton<WeatherDataSource>(
+      WeatherDataSourceRemoteImpl(weatherAPI: injector()),
+    );
 
     // Repositories
     injector.registerSingleton<CitiesRepository>(
       CitiesRepositoryImpl(dataSourceRemote: injector(), cityDataSource: injector()),
     );
+    injector.registerSingleton<WeatherRepository>(
+      WeatherRepositoryImpl(dataSourceRemote: injector()),
+    );
 
     // Blocs
     injector.registerSingleton<CitiesBloc>(CitiesBloc(citiesRepository: injector()));
+    injector.registerSingleton<WeatherBloc>(WeatherBloc(weatherRepository: injector()));
     injector.registerSingleton<MainPageBloc>(MainPageBloc(citiesBloc: injector()));
   }
 }
