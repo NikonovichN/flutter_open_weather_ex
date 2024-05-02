@@ -10,12 +10,12 @@ MainWeatherInfoDtoV1 _$MainWeatherInfoDtoV1FromJson(
         Map<String, dynamic> json) =>
     MainWeatherInfoDtoV1(
       temp: json['temp'] as num,
-      tempFeelsLike: json['tempFeelsLike'] as num,
+      tempFeelsLike: json['feels_like'] as num,
     );
 
 Map<String, dynamic> _$MainWeatherInfoDtoV1ToJson(
         MainWeatherInfoDtoV1 instance) =>
     <String, dynamic>{
       'temp': instance.temp,
-      'tempFeelsLike': instance.tempFeelsLike,
+      'feels_like': instance.tempFeelsLike,
     };
