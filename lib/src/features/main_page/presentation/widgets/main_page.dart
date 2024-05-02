@@ -47,6 +47,8 @@ class _MainPageContent extends StatelessWidget {
                   Text('Loaded'),
                   _emptySpaceL,
                   _CitiesListenerWrapper(),
+                  _emptySpaceL,
+                  Flexible(child: WeatherWidget()),
                 ],
               ),
             MainPageError() => const Text('Something went wrong...'),
