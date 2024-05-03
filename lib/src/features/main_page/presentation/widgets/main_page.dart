@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter_open_weather_ex/src/di/injections.dart';
 
@@ -63,15 +64,15 @@ class _MainPageContent extends StatelessWidget {
             child: switch (state) {
               MainPageInitial() => const CircularProgressIndicator(),
               MainPageLoading() => const CircularProgressIndicator(),
-              MainPageLoaded() => const Column(
+              MainPageLoaded() => Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     _emptySpaceL,
-                    Text('Loaded'),
+                    Text(AppStrings.of(context)!.loadedMainPage),
                     _emptySpaceL,
-                    CitiesWidget(),
+                    const CitiesWidget(),
                     _emptySpaceL,
-                    Flexible(child: WeatherWidget()),
+                    const Flexible(child: WeatherWidget()),
                   ],
                 ),
               MainPageError() => const Text('Something went wrong...'),
