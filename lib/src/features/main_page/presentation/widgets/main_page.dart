@@ -13,17 +13,24 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<CitiesBloc>(create: (_) => injector<CitiesBloc>()),
+        BlocProvider<CitiesBloc>(
+          create: (_) => injector<CitiesBloc>()..add(const LoadCitiesDataEvent()),
+        ),
         BlocProvider<WeatherBloc>(create: (_) => injector<WeatherBloc>()),
         BlocProvider<MainPageBloc>(
           create: (BuildContext context) {
             return MainPageBloc(
               citiesBloc: context.read<CitiesBloc>(),
+              weatherBloc: context.read<WeatherBloc>(),
             )..add(const ListenDependencies());
           },
         ),
       ],
-      child: const Scaffold(body: _MainPageContent()),
+      child: Scaffold(
+          body: Padding(
+        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+        child: const _MainPageContent(),
+      )),
     );
   }
 }
@@ -37,50 +44,41 @@ class _MainPageContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<MainPageBloc, MainPageState>(
       builder: (context, state) {
-        return Center(
-          child: switch (state) {
-            MainPageInitial() => const CircularProgressIndicator(),
-            MainPageLoading() => const CircularProgressIndicator(),
-            MainPageLoaded() => const Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('Loaded'),
-                  _emptySpaceL,
-                  _CitiesListenerWrapper(),
-                  _emptySpaceL,
-                  Flexible(child: WeatherWidget()),
-                ],
-              ),
-            MainPageError() => const Text('Something went wrong...'),
+        return BlocListener<CitiesBloc, CitiesState>(
+          listener: (context, state) {
+            if (state is CitiesLoaded && state.selectedCity != null) {
+              context.read<WeatherBloc>().add(
+                    UpdateWeatherDataByCityEvent(
+                      queryParams: WeatherQueryParams(
+                        lat: state.selectedCity!.coordinates.latitude.toString(),
+                        lon: state.selectedCity!.coordinates.longitude.toString(),
+                        units: UnitMetrics.metric.name,
+                        appid: injector<WeatherAPI>().getSecretKey,
+                      ),
+                    ),
+                  );
+            }
           },
+          child: Center(
+            child: switch (state) {
+              MainPageInitial() => const CircularProgressIndicator(),
+              MainPageLoading() => const CircularProgressIndicator(),
+              MainPageLoaded() => const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _emptySpaceL,
+                    Text('Loaded'),
+                    _emptySpaceL,
+                    CitiesWidget(),
+                    _emptySpaceL,
+                    Flexible(child: WeatherWidget()),
+                  ],
+                ),
+              MainPageError() => const Text('Something went wrong...'),
+            },
+          ),
         );
       },
-    );
-  }
-}
-
-class _CitiesListenerWrapper extends StatelessWidget {
-  const _CitiesListenerWrapper();
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocListener<CitiesBloc, CitiesState>(
-      listener: (context, state) {
-        if (state is CitiesLoaded && state.selectedCity != null) {
-          // TODO: move this logic to bloc
-          context.read<WeatherBloc>().add(
-                UpdateWeatherDataByCityEvent(
-                  queryParams: WeatherQueryParams(
-                    lat: state.selectedCity!.coordinates.latitude.toString(),
-                    lon: state.selectedCity!.coordinates.longitude.toString(),
-                    units: UnitMetrics.metric.name,
-                    appid: injector<WeatherAPI>().getSecretKey,
-                  ),
-                ),
-              );
-        }
-      },
-      child: const CitiesWidget(),
     );
   }
 }
