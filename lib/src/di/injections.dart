@@ -35,6 +35,5 @@ class DependencyInjections {
     // Blocs
     injector.registerSingleton<CitiesBloc>(CitiesBloc(citiesRepository: injector()));
     injector.registerSingleton<WeatherBloc>(WeatherBloc(weatherRepository: injector()));
-    injector.registerSingleton<MainPageBloc>(MainPageBloc(citiesBloc: injector()));
   }
 }

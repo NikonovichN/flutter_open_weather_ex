@@ -16,8 +16,6 @@ class CitiesBloc extends Bloc<CitiesEvent, CitiesState> {
     on<LoadCitiesDataEvent>(_loadCitiesDataEvent);
     on<LoadSelectedCityEvent>(_loadSelectedCityEvent);
     on<SaveCityEvent>(_saveCityEvent);
-
-    add(const LoadCitiesDataEvent());
   }
 
   Future<void> _loadCitiesDataEvent(LoadCitiesDataEvent event, Emitter emit) async {
