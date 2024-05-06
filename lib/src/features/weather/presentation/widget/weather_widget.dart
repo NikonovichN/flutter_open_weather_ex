@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../bloc/weather_bloc.dart';
 import 'today_widget.dart';
+import 'small_day_card.dart';
 
 class WeatherWidget extends StatelessWidget {
   const WeatherWidget({super.key});
+
+  static const _emptySpaceXL = SizedBox(height: 32.0);
+  static const _horizontalScrollHeight = 180.0;
+  static const _horizontalScrollPadding = EdgeInsets.symmetric(horizontal: 10.0);
+  static const _cardPadding = EdgeInsets.symmetric(horizontal: 10.0);
 
   @override
   Widget build(BuildContext context) {
@@ -22,11 +27,18 @@ class WeatherWidget extends StatelessWidget {
         WeatherLoaded() => Column(
             children: [
               const Today(),
+              _emptySpaceXL,
               SizedBox(
-                height: 300,
+                height: _horizontalScrollHeight,
                 child: ListView(
+                  padding: _horizontalScrollPadding,
                   scrollDirection: Axis.horizontal,
-                  children: state.nextDaysWeather.map((e) => Text(e.toString())).toList(),
+                  children: state.nextDaysWeather
+                      .map((e) => Padding(
+                            padding: _cardPadding,
+                            child: SmallDayCard(weatherData: e),
+                          ))
+                      .toList(),
                 ),
               ),
             ],

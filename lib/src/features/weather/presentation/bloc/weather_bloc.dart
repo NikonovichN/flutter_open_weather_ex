@@ -27,7 +27,12 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
       onData: (List<WeatherDetailsEntity> weather) {
         return WeatherLoaded(
           todayWeather: weather[0].toState(),
-          nextDaysWeather: weather.sublist(1).map((e) => e.toState()).toList(),
+          nextDaysWeather: weather
+              .map((e) => e.toState())
+              .where(
+                (e) => e.date.isAfter(DateTime.now()),
+              )
+              .toList(),
         );
       },
       onError: (error, _) => const WeatherError(),
