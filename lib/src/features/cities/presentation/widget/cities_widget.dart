@@ -1,55 +1,60 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'package:flutter_open_weather_ex/src/ui_kit/ui_kit.dart';
 
 import '../bloc/cities_bloc.dart';
 import '../../domain/entity/cities.dart';
 
 class CitiesWidget extends StatelessWidget {
+  static const _paddingLeft = EdgeInsets.only(left: 40.0);
+  static const _paddingRight = EdgeInsets.only(right: 40.0);
+
   const CitiesWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppStrings.of(context);
+
     return BlocBuilder<CitiesBloc, CitiesState>(
       builder: (context, state) {
         return switch (state) {
           CitiesInitial() => const CircularProgressIndicator(),
           CitiesLoading() => const CircularProgressIndicator(),
-          CitiesLoaded() => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  DropdownButton<CityEntity>(
-                    enableFeedback: true,
-                    value: state.selectedCity,
-                    underline: const SizedBox.shrink(),
-                    icon: const Icon(
-                      Icons.arrow_drop_down_circle_outlined,
-                      color: Colors.amber,
+          CitiesError() => Text(strings!.errorSmthWrong),
+          CitiesLoaded() => Container(
+              decoration: BoxDecoration(
+                color: KitColors.primary.withAlpha(120),
+                border: Border.all(color: KitColors.onPrimary.withAlpha(160)),
+                borderRadius: BorderRadius.circular(7.0),
+              ),
+              child: DropdownButton<CityEntity>(
+                enableFeedback: true,
+                value: state.selectedCity,
+                underline: const SizedBox.shrink(),
+                icon: const Padding(
+                  padding: _paddingRight,
+                  child: Icon(Icons.arrow_drop_down_circle_outlined, color: KitColors.onPrimary),
+                ),
+                dropdownColor: KitColors.primary.withAlpha(160),
+                onChanged: (value) =>
+                    context.read<CitiesBloc>().add(SaveCityEvent(cityEntity: value!)),
+                items: state.cities.map<DropdownMenuItem<CityEntity>>((value) {
+                  return DropdownMenuItem<CityEntity>(
+                    value: value,
+                    child: Padding(
+                      padding: _paddingLeft,
+                      child: Text(
+                        value.name,
+                        style: KitTextStyles.p1.copyWith(color: KitColors.onPrimary),
+                      ),
                     ),
-                    style: const TextStyle(fontSize: 20, color: Colors.blueAccent),
-                    onChanged: (value) =>
-                        context.read<CitiesBloc>().add(SaveCityEvent(cityEntity: value!)),
-                    items: state.cities.map<DropdownMenuItem<CityEntity>>((value) {
-                      return DropdownMenuItem<CityEntity>(
-                        value: value,
-                        child: Text(
-                          value.name,
-                          style: const TextStyle(color: Colors.black),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                  if (state.selectedCity?.name case final String city)
-                    Text(
-                      city,
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                ],
+                  );
+                }).toList(),
               ),
             ),
-          CitiesError() => const SizedBox.shrink(),
         };
       },
     );
