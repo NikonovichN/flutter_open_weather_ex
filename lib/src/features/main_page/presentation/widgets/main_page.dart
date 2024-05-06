@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter_open_weather_ex/src/di/injections.dart';
+import 'package:flutter_open_weather_ex/src/ui_kit/kit_color.dart';
+import 'package:flutter_open_weather_ex/src/ui_kit/kit_text_styles.dart';
 
 import '../../../features.dart';
 
@@ -30,6 +32,23 @@ class MainPage extends StatelessWidget {
           },
         ),
       ],
+      child: const _MainPage(),
+    );
+  }
+}
+
+class _MainPage extends StatelessWidget {
+  const _MainPage();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/images/background.png"),
+          fit: BoxFit.cover,
+        ),
+      ),
       child: Scaffold(
         body: Padding(
           padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
@@ -70,6 +89,7 @@ class _MainPageContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<MainPageBloc, MainPageState>(
       builder: (context, state) {
+        final strings = AppStrings.of(context);
         return BlocListener<CitiesBloc, CitiesState>(
           listener: (context, state) {
             if (state is CitiesLoaded && state.selectedCity != null) {
@@ -93,14 +113,17 @@ class _MainPageContent extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     _emptySpaceL,
-                    Text(AppStrings.of(context)!.mainPageLoaded),
+                    Text(
+                      strings!.mainPageLoaded,
+                      style: KitTextStyles.p1.copyWith(color: KitColors.onPrimary),
+                    ),
                     _emptySpaceL,
                     const CitiesWidget(),
                     _emptySpaceL,
                     const Flexible(child: WeatherWidget()),
                   ],
                 ),
-              MainPageError() => const Text('Something went wrong...'),
+              MainPageError() => Text(strings!.errorSmthWrong),
             },
           ),
         );
