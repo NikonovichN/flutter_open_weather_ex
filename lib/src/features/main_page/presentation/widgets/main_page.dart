@@ -103,6 +103,7 @@ class _MainPageContent extends StatelessWidget {
             child: switch (state) {
               MainPageInitial() => const CircularProgressIndicator(),
               MainPageLoading() => const CircularProgressIndicator(),
+              MainPageError() => Text(strings!.errorSmthWrong),
               MainPageLoaded() => Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -114,10 +115,9 @@ class _MainPageContent extends StatelessWidget {
                     _emptySpaceL,
                     const CitiesWidget(),
                     _emptySpaceL,
-                    const Flexible(child: WeatherWidget()),
+                    const WeatherWidget(),
                   ],
                 ),
-              MainPageError() => Text(strings!.errorSmthWrong),
             },
           ),
         );

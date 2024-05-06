@@ -14,4 +14,10 @@ class KitTextStyles {
     fontFamily: 'Merriweather',
     fontWeight: FontWeight.w400,
   );
+
+  static const TextStyle p4 = TextStyle(
+    fontSize: 12,
+    fontFamily: 'Merriweather',
+    fontWeight: FontWeight.w400,
+  );
 }
