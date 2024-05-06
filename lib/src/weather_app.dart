@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_open_weather_ex/src/ui_kit/kit_color.dart';
 
 import 'di/injections.dart';
 import 'features/features.dart';
@@ -47,7 +48,8 @@ class _WeatherApp extends StatelessWidget {
           locale: locale,
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.white,
+              primary: KitColors.primary,
+              seedColor: KitColors.primary,
               background: Colors.transparent,
             ),
             useMaterial3: true,
