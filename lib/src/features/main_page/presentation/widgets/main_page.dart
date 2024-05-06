@@ -109,7 +109,7 @@ class _MainPageContent extends StatelessWidget {
                     _emptySpaceL,
                     Text(
                       strings!.mainPageLoaded,
-                      style: KitTextStyles.p1.copyWith(color: KitColors.onPrimary),
+                      style: KitTextStyles.p1.copyWith(color: KitColors.onPrimary.withAlpha(160)),
                     ),
                     _emptySpaceL,
                     const CitiesWidget(),
