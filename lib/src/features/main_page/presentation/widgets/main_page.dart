@@ -55,13 +55,7 @@ class _MainPage extends StatelessWidget {
           child: const Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _LocaleSettings(),
-                ],
-              ),
+              _LocaleSettings(),
               Flexible(child: _MainPageContent()),
             ],
           ),
