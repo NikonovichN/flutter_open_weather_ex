@@ -12,7 +12,7 @@ final class AppSettingsInitial extends AppSettingsState {}
 final class AppSettingsLoading extends AppSettingsState {}
 
 final class AppSettingsLoaded extends AppSettingsState {
-  static const defaultValue = LocaleEntity(name: '');
+  static const defaultValue = LocaleEntity(name: 'en');
 
   final LocaleEntity localeEntity;
 

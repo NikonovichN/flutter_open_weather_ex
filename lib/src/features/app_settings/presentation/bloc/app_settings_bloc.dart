@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../domain/data/locale_repository.dart';
-
 import '../../domain/entity/locale.dart';
 
 part 'app_settings_event.dart';
@@ -35,7 +34,9 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
     final localeResponse = await _localeRepository.writeLocale(event.locale);
     localeResponse.fold(
       (error) => emit(AppSettingsError()),
-      (right) => right ? null : emit(AppSettingsError()),
+      (right) {
+        right ? emit(AppSettingsLoaded(localeEntity: event.locale)) : emit(AppSettingsError());
+      },
     );
   }
 }

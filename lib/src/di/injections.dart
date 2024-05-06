@@ -1,3 +1,5 @@
+import 'package:flutter_open_weather_ex/src/features/app_settings/app_settings.dart';
+import 'package:flutter_open_weather_ex/src/features/app_settings/data/repository/locale_repository.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,6 +25,9 @@ class DependencyInjections {
     injector.registerSingleton<WeatherDataSource>(
       WeatherDataSourceRemoteImpl(weatherAPI: injector()),
     );
+    injector.registerSingleton<LocaleDataSource>(
+      LocaleDataSourceLocalImpl(prefsManager: injector()),
+    );
 
     // Repositories
     injector.registerSingleton<CitiesRepository>(
@@ -31,9 +36,13 @@ class DependencyInjections {
     injector.registerSingleton<WeatherRepository>(
       WeatherRepositoryImpl(dataSourceRemote: injector()),
     );
+    injector.registerSingleton<LocaleRepository>(
+      LocaleRepositoryImpl(localeDataSource: injector()),
+    );
 
     // Blocs
     injector.registerSingleton<CitiesBloc>(CitiesBloc(citiesRepository: injector()));
     injector.registerSingleton<WeatherBloc>(WeatherBloc(weatherRepository: injector()));
+    injector.registerSingleton<AppSettingsBloc>(AppSettingsBloc(localeRepository: injector()));
   }
 }

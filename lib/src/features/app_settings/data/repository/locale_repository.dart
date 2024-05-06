@@ -7,6 +7,8 @@ import '../../domain/data/locale_repository.dart';
 import '../data_source/locale_data_source_local.dart';
 
 class LocaleRepositoryImpl implements LocaleRepository {
+  static const String _defaultLocale = 'en';
+
   final LocaleDataSource _localeDataSource;
 
   const LocaleRepositoryImpl({required LocaleDataSource localeDataSource})
@@ -17,11 +19,7 @@ class LocaleRepositoryImpl implements LocaleRepository {
     try {
       final response = await _localeDataSource.readLocale();
 
-      if (response == null) {
-        throw 'Empty locale!';
-      }
-
-      return Right(jsonDecode(response));
+      return Right(LocaleEntity(name: response == null ? _defaultLocale : jsonDecode(response)));
     } catch (error) {
       return Left(error.toString());
     }

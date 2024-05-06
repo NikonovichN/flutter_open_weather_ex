@@ -14,6 +14,9 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider<AppSettingsBloc>(
+          create: (_) => injector<AppSettingsBloc>()..add(const LoadAppSettingEvent()),
+        ),
         BlocProvider<CitiesBloc>(
           create: (_) => injector<CitiesBloc>()..add(const LoadCitiesDataEvent()),
         ),
@@ -28,11 +31,33 @@ class MainPage extends StatelessWidget {
         ),
       ],
       child: Scaffold(
-          body: Padding(
-        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-        child: const _MainPageContent(),
-      )),
+        body: Padding(
+          padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+          child: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _LocaleSettings(),
+                ],
+              ),
+              Flexible(child: _MainPageContent()),
+            ],
+          ),
+        ),
+      ),
     );
+  }
+}
+
+class _LocaleSettings extends StatelessWidget {
+  const _LocaleSettings();
+
+  @override
+  Widget build(BuildContext context) {
+    return const SelectLocaleWidget();
   }
 }
 
@@ -68,7 +93,7 @@ class _MainPageContent extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     _emptySpaceL,
-                    Text(AppStrings.of(context)!.loadedMainPage),
+                    Text(AppStrings.of(context)!.mainPageLoaded),
                     _emptySpaceL,
                     const CitiesWidget(),
                     _emptySpaceL,
