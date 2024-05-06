@@ -46,7 +46,10 @@ class _WeatherApp extends StatelessWidget {
           ],
           locale: locale,
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.white,
+              background: Colors.transparent,
+            ),
             useMaterial3: true,
           ),
           home: const MainPage(),

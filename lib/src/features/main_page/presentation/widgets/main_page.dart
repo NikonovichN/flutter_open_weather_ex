@@ -30,21 +30,40 @@ class MainPage extends StatelessWidget {
           },
         ),
       ],
-      child: Scaffold(
-        body: Padding(
-          padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-          child: const Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _LocaleSettings(),
-                ],
-              ),
-              Flexible(child: _MainPageContent()),
-            ],
+      child: const _MainPage(),
+    );
+  }
+}
+
+class _MainPage extends StatelessWidget {
+  const _MainPage();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.expand(
+      child: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/background.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Scaffold(
+          body: Padding(
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+            child: const Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _LocaleSettings(),
+                  ],
+                ),
+                Flexible(child: _MainPageContent()),
+              ],
+            ),
           ),
         ),
       ),
