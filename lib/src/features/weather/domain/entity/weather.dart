@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+// TODO: fix naming, add Entity
 class WeatherDetails extends Equatable {
   final DateTime date;
   final MainWeatherInfo main;
