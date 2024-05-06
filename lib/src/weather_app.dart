@@ -50,7 +50,7 @@ class _WeatherApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(
               primary: KitColors.primary,
               seedColor: KitColors.primary,
-              background: Colors.transparent,
+              background: Colors.black26,
             ),
             useMaterial3: true,
           ),

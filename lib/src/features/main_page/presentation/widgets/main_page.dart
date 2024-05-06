@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter_open_weather_ex/src/di/injections.dart';
+import 'package:flutter_open_weather_ex/src/ui_kit/kit_color.dart';
+import 'package:flutter_open_weather_ex/src/ui_kit/kit_text_styles.dart';
 
 import '../../../features.dart';
 
@@ -40,30 +42,28 @@ class _MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.expand(
-      child: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/background.png"),
-            fit: BoxFit.cover,
-          ),
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/images/background.png"),
+          fit: BoxFit.cover,
         ),
-        child: Scaffold(
-          body: Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-            child: const Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _LocaleSettings(),
-                  ],
-                ),
-                Flexible(child: _MainPageContent()),
-              ],
-            ),
+      ),
+      child: Scaffold(
+        body: Padding(
+          padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+          child: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _LocaleSettings(),
+                ],
+              ),
+              Flexible(child: _MainPageContent()),
+            ],
           ),
         ),
       ),
@@ -113,7 +113,10 @@ class _MainPageContent extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     _emptySpaceL,
-                    Text(strings!.mainPageLoaded),
+                    Text(
+                      strings!.mainPageLoaded,
+                      style: KitTextStyles.p1.copyWith(color: KitColors.onPrimary),
+                    ),
                     _emptySpaceL,
                     const CitiesWidget(),
                     _emptySpaceL,
