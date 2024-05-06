@@ -89,6 +89,7 @@ class _MainPageContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<MainPageBloc, MainPageState>(
       builder: (context, state) {
+        final strings = AppStrings.of(context);
         return BlocListener<CitiesBloc, CitiesState>(
           listener: (context, state) {
             if (state is CitiesLoaded && state.selectedCity != null) {
@@ -112,14 +113,14 @@ class _MainPageContent extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     _emptySpaceL,
-                    Text(AppStrings.of(context)!.mainPageLoaded),
+                    Text(strings!.mainPageLoaded),
                     _emptySpaceL,
                     const CitiesWidget(),
                     _emptySpaceL,
                     const Flexible(child: WeatherWidget()),
                   ],
                 ),
-              MainPageError() => const Text('Something went wrong...'),
+              MainPageError() => Text(strings!.errorSmthWrong),
             },
           ),
         );
