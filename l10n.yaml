@@ -1,0 +1,6 @@
+arb-dir: lib/src/res
+template-arb-file: app_en.arb
+
+output-dir: lib/src/res
+output-localization-file: app_localizations.dart
+output-class: AppStrings

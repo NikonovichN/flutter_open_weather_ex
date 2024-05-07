@@ -1,0 +1,13 @@
+{
+  "appSettingsLanguage": "Язык:",
+  "errorSmthWrong": "Что-то пошло не так!",
+  "mainPageLoaded": "Страница загружена!",
+  "weatherFeelsLike": "Ощущается как: {temperature}",
+  "@weatherFeelsLike": {
+    "placeholders": {
+      "temperature": {
+        "type": "String"
+      }
+    }
+  }
+}
