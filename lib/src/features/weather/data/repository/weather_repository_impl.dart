@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:either_dart/either.dart';
 import 'package:http/http.dart';
 
 import '../../api.dart';
@@ -15,17 +16,21 @@ class WeatherRepositoryImpl implements WeatherRepository {
     required WeatherDataSource dataSourceRemote,
   }) : _dataSourceRemote = dataSourceRemote;
 
+  static const _errorString = 'Something went wrong! Fails to get weather data!';
+
   @override
-  Stream<List<WeatherDetailsEntity>> fetchWeatherData(WeatherQueryParams queryParams) async* {
+  Future<Either<String, List<WeatherDetailsEntity>>> fetchWeatherData(
+      WeatherQueryParams queryParams) async {
     try {
       final Response response = await _dataSourceRemote.getData(queryParams);
 
       if (response.statusCode != 200) {
         throw Exception();
       }
-      yield* Stream.value(ListWeatherDetailsDtoV1.fromJson(jsonDecode(response.body)).toEntity);
+
+      return Right(ListWeatherDetailsDtoV1.fromJson(jsonDecode(response.body)).toEntity);
     } catch (_) {
-      yield* Stream.error('Something went wrong! Fails to get weather data!');
+      return const Left(_errorString);
     }
   }
 }
