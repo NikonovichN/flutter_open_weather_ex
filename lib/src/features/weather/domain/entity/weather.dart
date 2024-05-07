@@ -1,12 +1,11 @@
 import 'package:equatable/equatable.dart';
 
-// TODO: fix naming, add Entity
-class WeatherDetails extends Equatable {
+class WeatherDetailsEntity extends Equatable {
   final DateTime date;
-  final MainWeatherInfo main;
-  final List<WeatherStatus> status;
+  final MainWeatherInfoEntity main;
+  final List<WeatherStatusEntity> status;
 
-  const WeatherDetails({
+  const WeatherDetailsEntity({
     required this.date,
     required this.main,
     required this.status,
@@ -16,22 +15,22 @@ class WeatherDetails extends Equatable {
   List<Object?> get props => [date, main, status];
 }
 
-class MainWeatherInfo extends Equatable {
+class MainWeatherInfoEntity extends Equatable {
   final num temp;
   final num tempFeelsLike;
 
-  const MainWeatherInfo({required this.temp, required this.tempFeelsLike});
+  const MainWeatherInfoEntity({required this.temp, required this.tempFeelsLike});
 
   @override
   List<Object?> get props => [temp];
 }
 
-class WeatherStatus extends Equatable {
+class WeatherStatusEntity extends Equatable {
   final String main;
   final String description;
   final String icon;
 
-  const WeatherStatus({
+  const WeatherStatusEntity({
     required this.main,
     required this.description,
     required this.icon,

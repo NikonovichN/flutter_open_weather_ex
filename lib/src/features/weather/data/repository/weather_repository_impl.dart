@@ -16,7 +16,7 @@ class WeatherRepositoryImpl implements WeatherRepository {
   }) : _dataSourceRemote = dataSourceRemote;
 
   @override
-  Stream<List<WeatherDetails>> fetchWeatherData(WeatherQueryParams queryParams) async* {
+  Stream<List<WeatherDetailsEntity>> fetchWeatherData(WeatherQueryParams queryParams) async* {
     try {
       final Response response = await _dataSourceRemote.getData(queryParams);
 
@@ -31,11 +31,11 @@ class WeatherRepositoryImpl implements WeatherRepository {
 }
 
 extension on ListWeatherDetailsDtoV1 {
-  List<WeatherDetails> get toEntity => list.map((e) => e.toEntity).toList();
+  List<WeatherDetailsEntity> get toEntity => list.map((e) => e.toEntity).toList();
 }
 
 extension on WeatherDetailsDtoV1 {
-  WeatherDetails get toEntity => WeatherDetails(
+  WeatherDetailsEntity get toEntity => WeatherDetailsEntity(
         date: DateTime.fromMillisecondsSinceEpoch(date.toInt() * 1000),
         main: main.toEntity,
         status: status.map((e) => e.toEntity).toList(),
@@ -43,9 +43,11 @@ extension on WeatherDetailsDtoV1 {
 }
 
 extension on MainWeatherInfoDtoV1 {
-  MainWeatherInfo get toEntity => MainWeatherInfo(temp: temp, tempFeelsLike: tempFeelsLike);
+  MainWeatherInfoEntity get toEntity =>
+      MainWeatherInfoEntity(temp: temp, tempFeelsLike: tempFeelsLike);
 }
 
 extension on WeatherStatusDtoV1 {
-  WeatherStatus get toEntity => WeatherStatus(description: description, icon: icon, main: main);
+  WeatherStatusEntity get toEntity =>
+      WeatherStatusEntity(description: description, icon: icon, main: main);
 }

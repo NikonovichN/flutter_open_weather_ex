@@ -7,5 +7,7 @@ class KitColors {
 
   static const onPrimary = Color.fromRGBO(255, 255, 255, 1);
 
-  static const backgroundAction = Color.fromRGBO(141, 43, 43, 1);
+  static const onSecondary = Color.fromRGBO(207, 207, 207, 1);
+
+  static const background = Color.fromRGBO(10, 80, 85, 1);
 }

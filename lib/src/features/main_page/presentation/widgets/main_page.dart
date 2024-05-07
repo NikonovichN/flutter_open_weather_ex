@@ -76,6 +76,7 @@ class _LocaleSettings extends StatelessWidget {
 
 class _MainPageContent extends StatelessWidget {
   static const _emptySpaceL = SizedBox(height: 20.0);
+  static const _emptySpaceXL = SizedBox(height: 32.0);
 
   const _MainPageContent();
 
@@ -99,27 +100,27 @@ class _MainPageContent extends StatelessWidget {
                   );
             }
           },
-          child: Center(
-            child: switch (state) {
-              MainPageInitial() => const CircularProgressIndicator(),
-              MainPageLoading() => const CircularProgressIndicator(),
-              MainPageLoaded() => Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _emptySpaceL,
-                    Text(
-                      strings!.mainPageLoaded,
-                      style: KitTextStyles.p1.copyWith(color: KitColors.onPrimary.withAlpha(160)),
-                    ),
-                    _emptySpaceL,
-                    const CitiesWidget(),
-                    _emptySpaceL,
-                    const Flexible(child: WeatherWidget()),
-                  ],
-                ),
-              MainPageError() => Text(strings!.errorSmthWrong),
-            },
-          ),
+          child: switch (state) {
+            MainPageInitial() => const CircularProgressIndicator(),
+            MainPageLoading() => const CircularProgressIndicator(),
+            MainPageError() => Text(strings!.errorSmthWrong),
+            MainPageLoaded() => Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Spacer(flex: 1),
+                  _emptySpaceL,
+                  Text(
+                    strings!.mainPageLoaded,
+                    style: KitTextStyles.p1.copyWith(color: KitColors.onPrimary.withAlpha(160)),
+                  ),
+                  _emptySpaceL,
+                  const CitiesWidget(),
+                  _emptySpaceXL,
+                  const WeatherWidget(),
+                  const Spacer(flex: 2),
+                ],
+              ),
+          },
         );
       },
     );

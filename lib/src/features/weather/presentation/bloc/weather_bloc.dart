@@ -24,13 +24,29 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
 
     await emit.forEach(
       weatherStream,
-      onData: (List<WeatherDetails> weather) {
+      onData: (List<WeatherDetailsEntity> weather) {
         return WeatherLoaded(
-          todayWeather: weather[0],
-          nextDaysWeather: weather.sublist(1),
+          todayWeather: weather[0].toState(),
+          nextDaysWeather: weather
+              .map((e) => e.toState())
+              .where(
+                (e) => e.date.isAfter(DateTime.now()),
+              )
+              .toList(),
         );
       },
       onError: (error, _) => const WeatherError(),
     );
   }
+}
+
+extension on WeatherDetailsEntity {
+  WeatherDetailsState toState() => WeatherDetailsState(
+        date: date,
+        temp: '${main.temp.ceil().toString()} °C',
+        tempFeelsLike: '${main.tempFeelsLike.ceil().toString()} °C',
+        status: status[0].main,
+        description: status[0].description,
+        icon: status[0].icon,
+      );
 }
