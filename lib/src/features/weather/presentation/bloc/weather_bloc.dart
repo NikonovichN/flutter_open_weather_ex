@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_open_weather_ex/src/features/weather/domain/entity/weather.dart';
 
 import '../../api.dart';
 import '../../domain/data/weather_repository.dart';
+import '../../domain/entity/weather.dart';
 
 part 'weather_event.dart';
 part 'weather_state.dart';
@@ -20,23 +20,26 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   Future<void> _loadWeatherDataEvent(UpdateWeatherDataByCityEvent event, Emitter emit) async {
     emit(const WeatherLoading());
 
-    final weatherStream = _weatherRepository.fetchWeatherData(event.queryParams);
+    if (event.queryParams case final WeatherQueryParams params) {
+      final weatherResponse = await _weatherRepository.fetchWeatherData(params);
 
-    await emit.forEach(
-      weatherStream,
-      onData: (List<WeatherDetailsEntity> weather) {
-        return WeatherLoaded(
-          todayWeather: weather[0].toState(),
-          nextDaysWeather: weather
-              .map((e) => e.toState())
-              .where(
-                (e) => e.date.isAfter(DateTime.now()),
-              )
-              .toList(),
-        );
-      },
-      onError: (error, _) => const WeatherError(),
-    );
+      emit(
+        weatherResponse.fold(
+          (_) => const WeatherError(),
+          (List<WeatherDetailsEntity> weather) => WeatherLoaded(
+            todayWeather: weather[0].toState(),
+            nextDaysWeather: weather
+                .map((e) => e.toState())
+                .where(
+                  (e) => e.date.isAfter(DateTime.now()),
+                )
+                .toList(),
+          ),
+        ),
+      );
+    } else {
+      emit(const WeatherInitial());
+    }
   }
 }
 

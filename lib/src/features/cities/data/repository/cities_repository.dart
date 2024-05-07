@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:either_dart/either.dart';
+
 import '../model/cities_dto_v1.dart';
 import '../model/coordinates_dto_v1.dart';
 import '../../domain/entity/cities.dart';
@@ -17,8 +19,13 @@ class CitiesRepositoryImpl implements CitiesRepository {
   })  : _citiesDataSource = dataSourceRemote,
         _cityDataSource = cityDataSource;
 
+  static const _errorCitiesString = 'Something went wrong! Failed to load cities!';
+  static const _errorCityString = 'Something went wrong! Failed to load the city!';
+  static const _errorWriteCityString =
+      'Something went wrong! City has not been recorded in the local repository!';
+
   @override
-  Stream<List<CityEntity>> fetchCities() async* {
+  Future<Either<String, List<CityEntity>>> fetchCities() async {
     try {
       final response = await _citiesDataSource.fetchCities();
 
@@ -30,33 +37,30 @@ class CitiesRepositoryImpl implements CitiesRepository {
       final serializedResponse =
           decodeResponse.map((e) => CitiesDtoV1.fromJson(e).toEntity).toList();
 
-      yield* Stream.value(serializedResponse);
+      return Right(serializedResponse);
     } catch (_) {
-      yield* Stream.error('Something went wrong! Failed to load cities!');
+      return const Left(_errorCitiesString);
     }
   }
 
   @override
-  Stream<CityEntity?> readSelectedCity() async* {
+  Future<Either<String, CityEntity?>> readSelectedCity() async {
     try {
       final response = await _cityDataSource.readSelectedCity();
 
-      if (response == null) {
-        yield* Stream.value(null);
-      } else {
-        yield* Stream.value(CitiesDtoV1.fromJson(jsonDecode(response)).toEntity);
-      }
+      return Right(response == null ? null : CitiesDtoV1.fromJson(jsonDecode(response)).toEntity);
     } catch (_) {
-      yield* Stream.error('Something went wrong! Failed to load the city!');
+      return const Left(_errorCityString);
     }
   }
 
   @override
-  Future<void> writeSelectedCity(CityEntity city) async {
+  Future<Either<String, bool>> writeSelectedCity(CityEntity city) async {
     try {
       await _cityDataSource.writeSelectedCity(jsonEncode(city.toJson));
+      return const Right(true);
     } catch (_) {
-      Future.error('Something went wrong! City has not been recorded in the local repository!');
+      return const Left(_errorWriteCityString);
     }
   }
 }

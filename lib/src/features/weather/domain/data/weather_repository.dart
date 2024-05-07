@@ -1,6 +1,8 @@
+import 'package:either_dart/either.dart';
+
 import '../../api.dart';
 import '../entity/weather.dart';
 
 abstract class WeatherRepository {
-  Stream<List<WeatherDetailsEntity>> fetchWeatherData(WeatherQueryParams params);
+  Future<Either<String, List<WeatherDetailsEntity>>> fetchWeatherData(WeatherQueryParams params);
 }

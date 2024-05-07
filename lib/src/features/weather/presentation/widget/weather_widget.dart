@@ -31,6 +31,7 @@ class WeatherWidget extends StatelessWidget {
               SizedBox(
                 height: _horizontalScrollHeight,
                 child: ListView(
+                  shrinkWrap: true,
                   padding: _horizontalScrollPadding,
                   scrollDirection: Axis.horizontal,
                   children: state.nextDaysWeather

@@ -21,23 +21,22 @@ class CitiesBloc extends Bloc<CitiesEvent, CitiesState> {
   Future<void> _loadCitiesDataEvent(LoadCitiesDataEvent event, Emitter emit) async {
     emit(CitiesLoading());
 
-    final citiesStream = _repository.fetchCities();
+    final citiesResponse = await _repository.fetchCities();
 
-    await emit.forEach(
-      citiesStream,
-      onData: (List<CityEntity> cities) => CitiesLoaded(cities: cities),
-      onError: (error, _) => CitiesError(),
-    );
+    emit(citiesResponse.fold(
+      (_) => CitiesError(),
+      (List<CityEntity> cities) => CitiesLoaded(cities: cities),
+    ));
 
     add(const LoadSelectedCityEvent());
   }
 
   Future<void> _loadSelectedCityEvent(LoadSelectedCityEvent event, Emitter emit) async {
     if (state is CitiesLoaded) {
-      await emit.forEach(
-        _repository.readSelectedCity(),
-        onData: (CityEntity? city) => (state as CitiesLoaded).copyWith(selectedCity: city),
-      );
+      final cityResponse = await _repository.readSelectedCity();
+      cityResponse.map((city) {
+        emit((state as CitiesLoaded).copyWith(selectedCity: city));
+      });
     }
   }
 
