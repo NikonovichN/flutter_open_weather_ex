@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'package:intl/intl.dart' as intl;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter_open_weather_ex/src/ui_kit/ui_kit.dart';
 
-import '../../../weather/helpers.dart';
 import '../../weather.dart';
 
 class Today extends StatelessWidget {
@@ -17,11 +18,15 @@ class Today extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppStrings.of(context);
+    final locale = AppStrings.of(context)?.localeName;
+
     return BlocBuilder<WeatherBloc, WeatherState>(
       buildWhen: (prev, cur) => cur is WeatherLoaded,
       builder: (context, state) {
         state as WeatherLoaded;
         final day = state.todayWeather;
+        final weekDay = intl.DateFormat.EEEE(locale).format(day.date).toUpperCase();
 
         return ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: _maxWidthContainer),
@@ -40,7 +45,7 @@ class Today extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        WeatherDay.values[day.date.weekday - 1].name.toUpperCase(),
+                        weekDay,
                         style: KitTextStyles.p3.copyWith(color: KitColors.onSecondary),
                       ),
                       Text(
@@ -68,23 +73,8 @@ class Today extends StatelessWidget {
                   ),
                   _emptySpaceL,
                   Text(
-                    'Feels like: ${day.tempFeelsLike}',
+                    strings!.weatherFeelsLike(day.tempFeelsLike),
                     style: KitTextStyles.p4.copyWith(color: KitColors.onSecondary),
-                  ),
-                  _emptySpaceL,
-                  RichText(
-                    text: TextSpan(
-                      text: '${day.status}: ',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                      children: [
-                        TextSpan(
-                          text: day.description,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.normal,
-                          ),
-                        )
-                      ],
-                    ),
                   ),
                 ],
               ),

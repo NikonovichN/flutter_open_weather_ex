@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' as intl;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter_open_weather_ex/src/ui_kit/ui_kit.dart';
 
-import '../../helpers.dart';
 import '../bloc/weather_bloc.dart';
 
 class SmallDayCard extends StatelessWidget {
@@ -12,12 +12,18 @@ class SmallDayCard extends StatelessWidget {
 
   const SmallDayCard({super.key, required this.weatherData});
 
+  static const _widthCard = 120.0;
   static const _paddingContainer = EdgeInsets.all(8);
   static const _emptySpaceXXM = SizedBox(height: 8);
 
   @override
   Widget build(BuildContext context) {
+    final locale = AppStrings.of(context)?.localeName;
+    final weekDay = intl.DateFormat.EEEE(locale).format(weatherData.date).toUpperCase();
+    final time = intl.DateFormat("HH:mm").format(weatherData.date);
+
     return Container(
+      width: _widthCard,
       padding: _paddingContainer,
       decoration: BoxDecoration(
         color: KitColors.background.withAlpha(120),
@@ -27,7 +33,7 @@ class SmallDayCard extends StatelessWidget {
       child: DefaultTextStyle(
         style: KitTextStyles.p4.copyWith(color: KitColors.onSecondary),
         child: Column(children: [
-          Text(WeatherDay.values[weatherData.date.weekday - 1].name.toUpperCase()),
+          Text(weekDay),
           _emptySpaceXXM,
           Text(weatherData.temp),
           _emptySpaceXXM,
@@ -38,7 +44,7 @@ class SmallDayCard extends StatelessWidget {
           _emptySpaceXXM,
           Text(weatherData.status),
           _emptySpaceXXM,
-          Text(DateFormat("HH:mm").format(weatherData.date))
+          Text(time)
         ]),
       ),
     );
