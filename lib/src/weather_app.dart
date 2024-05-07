@@ -1,8 +1,11 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:flutter_open_weather_ex/src/ui_kit/kit_color.dart';
 
 import 'di/injections.dart';
@@ -35,6 +38,12 @@ class _WeatherApp extends StatelessWidget {
 
         return MaterialApp(
           title: 'Weather App',
+          scrollBehavior: const MaterialScrollBehavior().copyWith(
+            dragDevices: {
+              PointerDeviceKind.mouse,
+              PointerDeviceKind.touch,
+            },
+          ),
           localizationsDelegates: const [
             AppStrings.delegate,
             GlobalMaterialLocalizations.delegate,

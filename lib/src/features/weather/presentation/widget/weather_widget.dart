@@ -21,9 +21,9 @@ class WeatherWidget extends StatelessWidget {
 
     return BlocBuilder<WeatherBloc, WeatherState>(
       builder: (context, state) => switch (state) {
-        WeatherInitial() => const Center(child: CircularProgressIndicator()),
+        WeatherInitial() => const SizedBox.shrink(),
         WeatherLoading() => const Center(child: CircularProgressIndicator()),
-        WeatherError() => Text(strings!.errorSmthWrong),
+        WeatherError() => Center(child: Text(strings!.errorSmthWrong)),
         WeatherLoaded() => Column(
             children: [
               const Today(),
