@@ -4,6 +4,7 @@ abstract class CitiesAPI {
   String get getCitiesPath;
   String get getDefaultCountry;
   String get getDefaultLimitOfCities;
+  String get getDefaultLocalization;
 }
 
 class CitiesApiImpl implements CitiesAPI {
@@ -16,6 +17,8 @@ class CitiesApiImpl implements CitiesAPI {
   static const defaultCountry = 'BY';
 
   static const defaultLimitOfCities = '30';
+
+  static const defaultLocalization = 'ru';
 
   @override
   String get getSecretKey => secretKey;
@@ -31,4 +34,7 @@ class CitiesApiImpl implements CitiesAPI {
 
   @override
   String get getDefaultLimitOfCities => defaultLimitOfCities;
+
+  @override
+  String get getDefaultLocalization => defaultLocalization;
 }

@@ -62,7 +62,8 @@ class CitiesRepositoryImpl implements CitiesRepository {
 }
 
 extension on CitiesDtoV1 {
-  CityEntity get toEntity => CityEntity(name: name, coordinates: coordinates.toEntity);
+  CityEntity get toEntity =>
+      CityEntity(name: name, localizedName: localizedName, coordinates: coordinates.toEntity);
 }
 
 extension on CoordinatesDtoV1 {
@@ -76,5 +77,6 @@ extension on CityEntity {
           longitude: coordinates.longitude,
         ),
         name: name,
+        localizedName: localizedName,
       ).toJson();
 }

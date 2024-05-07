@@ -7,10 +7,12 @@ part 'cities_dto_v1.g.dart';
 @JsonSerializable()
 class CitiesDtoV1 {
   final String name;
+  final String localizedName;
   final CoordinatesDtoV1 coordinates;
 
   const CitiesDtoV1({
     required this.name,
+    required this.localizedName,
     required this.coordinates,
   });
 
