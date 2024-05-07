@@ -19,28 +19,26 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
   }
 
   Future<void> _listenDependencies(ListenDependencies event, Emitter emit) async {
-    await rx.BehaviorSubject.seeded(_citiesBloc.stream).forEach((citiesState) async {
-      await emit.onEach(
-        citiesState,
-        onData: (citiesData) => switch (citiesData) {
-          CitiesInitial() => emit(MainPageLoading()),
-          CitiesLoading() => emit(MainPageLoading()),
-          CitiesLoaded() => citiesData.selectedCity != null
-              ? rx.BehaviorSubject.seeded(_weatherBloc.stream).forEach((weatherState) async {
-                  await emit.onEach(
-                    weatherState,
-                    onData: (weatherData) => switch (weatherData) {
-                      WeatherInitial() => emit(MainPageLoading()),
-                      WeatherLoading() => emit(MainPageLoading()),
-                      WeatherLoaded() => emit(MainPageLoaded()),
-                      WeatherError() => emit(MainPageError()),
-                    },
-                  );
-                })
-              : emit(MainPageLoaded()),
-          CitiesError() => emit(MainPageError()),
-        },
-      );
-    });
+    final listener = rx.CombineLatestStream.combine2<CitiesState, WeatherState, MainPageState>(
+      _citiesBloc.stream,
+      _weatherBloc.stream,
+      (citiesState, weatherState) {
+        return switch (citiesState) {
+          CitiesInitial() => MainPageLoading(),
+          CitiesLoading() => MainPageLoading(),
+          CitiesError() => MainPageError(),
+          CitiesLoaded() => citiesState.selectedCity != null
+              ? switch (weatherState) {
+                  WeatherInitial() => MainPageLoading(),
+                  WeatherLoading() => MainPageLoading(),
+                  WeatherLoaded() => MainPageLoaded(),
+                  WeatherError() => MainPageError(),
+                }
+              : MainPageLoaded()
+        };
+      },
+    );
+
+    await emit.forEach(listener, onData: (data) => data);
   }
 }

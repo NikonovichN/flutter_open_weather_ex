@@ -20,23 +20,27 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   Future<void> _loadWeatherDataEvent(UpdateWeatherDataByCityEvent event, Emitter emit) async {
     emit(const WeatherLoading());
 
-    final weatherStream = _weatherRepository.fetchWeatherData(event.queryParams);
+    if (event.queryParams case final WeatherQueryParams params) {
+      final weatherStream = _weatherRepository.fetchWeatherData(params);
 
-    await emit.forEach(
-      weatherStream,
-      onData: (List<WeatherDetailsEntity> weather) {
-        return WeatherLoaded(
-          todayWeather: weather[0].toState(),
-          nextDaysWeather: weather
-              .map((e) => e.toState())
-              .where(
-                (e) => e.date.isAfter(DateTime.now()),
-              )
-              .toList(),
-        );
-      },
-      onError: (error, _) => const WeatherError(),
-    );
+      await emit.forEach(
+        weatherStream,
+        onData: (List<WeatherDetailsEntity> weather) {
+          return WeatherLoaded(
+            todayWeather: weather[0].toState(),
+            nextDaysWeather: weather
+                .map((e) => e.toState())
+                .where(
+                  (e) => e.date.isAfter(DateTime.now()),
+                )
+                .toList(),
+          );
+        },
+        onError: (error, _) => const WeatherError(),
+      );
+    } else {
+      emit(const WeatherInitial());
+    }
   }
 }
 

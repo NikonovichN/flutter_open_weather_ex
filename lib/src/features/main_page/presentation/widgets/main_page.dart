@@ -87,15 +87,17 @@ class _MainPageContent extends StatelessWidget {
         final strings = AppStrings.of(context);
         return BlocListener<CitiesBloc, CitiesState>(
           listener: (context, state) {
-            if (state is CitiesLoaded && state.selectedCity != null) {
+            if (state is CitiesLoaded) {
               context.read<WeatherBloc>().add(
                     UpdateWeatherDataByCityEvent(
-                      queryParams: WeatherQueryParams(
-                        lat: state.selectedCity!.coordinates.latitude.toString(),
-                        lon: state.selectedCity!.coordinates.longitude.toString(),
-                        units: UnitMetrics.metric.name,
-                        appid: injector<WeatherAPI>().getSecretKey,
-                      ),
+                      queryParams: state.selectedCity != null
+                          ? WeatherQueryParams(
+                              lat: state.selectedCity!.coordinates.latitude.toString(),
+                              lon: state.selectedCity!.coordinates.longitude.toString(),
+                              units: UnitMetrics.metric.name,
+                              appid: injector<WeatherAPI>().getSecretKey,
+                            )
+                          : null,
                     ),
                   );
             }
