@@ -101,24 +101,25 @@ class _MainPageContent extends StatelessWidget {
             }
           },
           child: switch (state) {
-            MainPageInitial() => const CircularProgressIndicator(),
-            MainPageLoading() => const CircularProgressIndicator(),
+            MainPageInitial() => const Center(child: CircularProgressIndicator()),
+            MainPageLoading() => const Center(child: CircularProgressIndicator()),
             MainPageError() => Text(strings!.errorSmthWrong),
-            MainPageLoaded() => Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Spacer(flex: 1),
-                  _emptySpaceL,
-                  Text(
-                    strings!.mainPageLoaded,
-                    style: KitTextStyles.p1.copyWith(color: KitColors.onPrimary.withAlpha(160)),
-                  ),
-                  _emptySpaceL,
-                  const CitiesWidget(),
-                  _emptySpaceXL,
-                  const WeatherWidget(),
-                  const Spacer(flex: 2),
-                ],
+            MainPageLoaded() => SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _emptySpaceXL,
+                    Text(
+                      strings!.mainPageLoaded,
+                      style: KitTextStyles.p1.copyWith(color: KitColors.onPrimary.withAlpha(160)),
+                    ),
+                    _emptySpaceL,
+                    const CitiesWidget(),
+                    _emptySpaceXL,
+                    const WeatherWidget(),
+                    _emptySpaceXL
+                  ],
+                ),
               ),
           },
         );
