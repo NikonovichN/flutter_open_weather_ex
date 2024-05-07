@@ -20,6 +20,7 @@ class CitiesDataSourceRemoteImpl implements CitiesDataSource {
         'limit': _citiesAPI.getDefaultLimitOfCities,
         'country': _citiesAPI.getDefaultCountry,
         'type': 'CITY',
+        'language': _citiesAPI.getDefaultLocalization
       }),
       headers: {
         "X-RapidAPI-Host": _citiesAPI.getBaseURI,

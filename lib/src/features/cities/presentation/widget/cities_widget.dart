@@ -11,11 +11,13 @@ import '../../domain/entity/cities.dart';
 class CitiesWidget extends StatelessWidget {
   static const _paddingLeft = EdgeInsets.only(left: 40.0);
   static const _paddingRight = EdgeInsets.only(right: 40.0);
+  static const _enLocale = 'en';
 
   const CitiesWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final locale = AppStrings.of(context)?.localeName;
     final strings = AppStrings.of(context);
 
     return BlocBuilder<CitiesBloc, CitiesState>(
@@ -47,7 +49,7 @@ class CitiesWidget extends StatelessWidget {
                     child: Padding(
                       padding: _paddingLeft,
                       child: Text(
-                        value.name,
+                        locale == _enLocale ? value.name : value.localizedName,
                         style: KitTextStyles.p1.copyWith(color: KitColors.onPrimary),
                       ),
                     ),
